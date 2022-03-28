@@ -160,21 +160,15 @@ function TemplateTransformerHandler:body_filter(config)
           return ngx.ERROR
         end
         local req_query_string = req_get_uri_args()
-        local transformed_body = template_transformer.get_template(config.response_template){headers = headers,
-                                                                                             body = body,
-                                                                                             raw_body = raw_body,
-                                                                                             cjson_encode = cjson_encode,
-                                                                                             cjson_decode = cjson_decode,
-                                                                                             mask_field = utils.mask_field,
-                                                                                             status = ngx.status,
-                                                                                             req_query_string = req_query_string}
-        
+        local transformed_body = body
+        if config.response_template == "error-only" then
+            transformed_body = template_transformer.get_template(config.response_template){headers = headers, body = body, raw_body = raw_body, cjson_encode = cjson_encode, cjson_decode = cjson_decode, mask_field = utils.mask_field, status = ngx.status, req_query_string = req_query_string}
         
         transformed_body = prepare_body(transformed_body)
         ngx.arg[1] = transformed_body
         if transformed_body == nil or transformed_body == '' then 
           ngx.log(ngx.DEBUG, string.format("Transformed Body JSON is nil or empty"))
-        else  
+        else
           local status, json_transformed_body = pcall(cjson_decode, transformed_body)
           if status then
             utils.hide_fields(json_transformed_body, config.hidden_fields)
