@@ -162,6 +162,7 @@ function TemplateTransformerHandler:body_filter(config)
         local req_query_string = req_get_uri_args()
         local transformed_body = body
         if config.response_template ~= "error-only" then
+          ngx.log(ngx.DEBUG, string.format("TEST: error-only. Transforming"))
           transformed_body = template_transformer.get_template(config.response_template){headers = headers, body = body, raw_body = raw_body, cjson_encode = cjson_encode, cjson_decode = cjson_decode, mask_field = utils.mask_field, status = ngx.status, req_query_string = req_query_string}
         else
           ngx.log(ngx.DEBUG, string.format("TEST: error-only. Forwarding response without transforming"))
