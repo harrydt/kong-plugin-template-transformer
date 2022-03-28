@@ -161,7 +161,7 @@ function TemplateTransformerHandler:body_filter(config)
         end
         local req_query_string = req_get_uri_args()
         local transformed_body = body
-        if config.response_template == "error-only" then
+        if config.response_template ~= "error-only" then
             transformed_body = template_transformer.get_template(config.response_template){headers = headers, body = body, raw_body = raw_body, cjson_encode = cjson_encode, cjson_decode = cjson_decode, mask_field = utils.mask_field, status = ngx.status, req_query_string = req_query_string}
         
         transformed_body = prepare_body(transformed_body)
