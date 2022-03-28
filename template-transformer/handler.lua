@@ -134,7 +134,7 @@ function TemplateTransformerHandler:header_filter(config)
 end
 
 function TemplateTransformerHandler:body_filter(config)
-  if config.response_template and config.response_template ~= "" then
+  if config.response_template and config.response_template ~= "" and config.response_template ~= "error-only" then
     local chunk, eof = ngx.arg[1], ngx.arg[2]
     if not eof then
       -- sometimes the data comes in chunks and every chunk is a different call
